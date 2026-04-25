@@ -9,6 +9,11 @@ interface BarcodeScannerProps {
 
 export default function BarcodeScanner({ onResult, onClose }: BarcodeScannerProps) {
   const [error, setError] = useState<string | null>(null);
+  const onResultRef = React.useRef(onResult);
+
+  useEffect(() => {
+    onResultRef.current = onResult;
+  }, [onResult]);
 
   useEffect(() => {
     let isMounted = true;
@@ -30,7 +35,7 @@ export default function BarcodeScanner({ onResult, onClose }: BarcodeScannerProp
             if (isMounted && isScanning) {
               isScanning = false;
               html5QrCode?.stop()
-                .then(() => onResult(decodedText))
+                .then(() => onResultRef.current(decodedText))
                 .catch(console.error);
             }
           },
@@ -59,7 +64,7 @@ export default function BarcodeScanner({ onResult, onClose }: BarcodeScannerProp
         html5QrCode.stop().catch(console.error);
       }
     };
-  }, [onResult]);
+  }, []);
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
@@ -96,7 +101,7 @@ export default function BarcodeScanner({ onResult, onClose }: BarcodeScannerProp
                 Arahkan kamera belakang ke barcode kemasan produk (EAN/UPC/QR)
               </p>
               <div id="reader" className="w-full min-h-[300px] bg-slate-800 rounded-2xl overflow-hidden border-4 border-slate-200 relative flex items-center justify-center text-slate-400">
-                Lading Camera...
+                Loading Camera...
               </div>
             </>
           )}

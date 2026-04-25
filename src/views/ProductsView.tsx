@@ -58,7 +58,16 @@ export default function ProductsView() {
        // Otherwise, try to find and edit the product, or open new product with that barcode
        const matched = products.find(p => p.barcode === barcode);
        if (matched) {
-         handleOpenModal(matched);
+         setEditingProduct(matched);
+         setFormData({
+           name: matched.name,
+           price: matched.price.toString(),
+           stock: (matched.stock + 1).toString(), // Auto increment stock
+           category: matched.category,
+           image: matched.image || '',
+           barcode: matched.barcode || ''
+         });
+         setIsModalOpen(true);
        } else {
          handleOpenModal();
          handleBarcodeScanned(barcode);
@@ -70,6 +79,23 @@ export default function ProductsView() {
 
   const handleBarcodeScanned = async (barcode: string) => {
     setIsScanning(false);
+
+    // Cek apakah produk dengan barcode ini sudah ada
+    const existingProduct = products.find(p => p.barcode === barcode);
+    if (existingProduct) {
+      // Jika ada, jadikan mode edit dan tambah stoknya di form
+      setEditingProduct(existingProduct);
+      setFormData({
+        name: existingProduct.name,
+        price: existingProduct.price.toString(),
+        stock: (existingProduct.stock + 1).toString(),
+        category: existingProduct.category,
+        image: existingProduct.image || '',
+        barcode: existingProduct.barcode || ''
+      });
+      return;
+    }
+
     setFormData(prev => ({ ...prev, barcode }));
     setIsLoadingBarcode(true);
 
