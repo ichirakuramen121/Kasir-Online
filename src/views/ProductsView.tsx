@@ -4,6 +4,7 @@ import { formatIDR, generateId } from '../utils';
 import { Product } from '../types';
 import { Plus, Edit2, Trash2, Search, PackageOpen, X, ImagePlus, ScanBarcode, Loader2 } from 'lucide-react';
 import BarcodeScanner from '../components/BarcodeScanner';
+import { useBarcodeScanner } from '../hooks/useBarcodeScanner';
 
 export default function ProductsView() {
   const { products, setProducts } = useAppContext();
@@ -48,6 +49,24 @@ export default function ProductsView() {
     }
     setIsModalOpen(true);
   };
+
+  const handleGlobalScan = (barcode: string) => {
+    // If scanning while modal is open, just populate the form
+    if (isModalOpen) {
+       handleBarcodeScanned(barcode);
+    } else {
+       // Otherwise, try to find and edit the product, or open new product with that barcode
+       const matched = products.find(p => p.barcode === barcode);
+       if (matched) {
+         handleOpenModal(matched);
+       } else {
+         handleOpenModal();
+         handleBarcodeScanned(barcode);
+       }
+    }
+  };
+
+  useBarcodeScanner({ onScan: handleGlobalScan, isActive: !isScanning });
 
   const handleBarcodeScanned = async (barcode: string) => {
     setIsScanning(false);

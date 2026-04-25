@@ -4,7 +4,7 @@ import { formatIDR, generateId } from '../utils';
 import { Plus, Minus, Trash2, ShoppingCart, CreditCard, X, QrCode, Banknote, Printer, CheckCircle, ScanBarcode } from 'lucide-react';
 import { Transaction, PaymentMethod } from '../types';
 import BarcodeScanner from '../components/BarcodeScanner';
-
+import { useBarcodeScanner } from '../hooks/useBarcodeScanner';
 import { jsPDF } from "jspdf";
 
 export default function POSView() {
@@ -20,6 +20,24 @@ export default function POSView() {
 
   // Print state
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
+
+  const handleGlobalScan = (barcode: string) => {
+    // Check if modal is open, if so don't interfere
+    if (isCheckoutOpen || isSuccessModalOpen || isScanning) return;
+    
+    const matched = products.find(p => p.barcode === barcode);
+    if (matched) {
+      addToCart(matched);
+      setSearchTerm('');
+    } else {
+      alert(`Produk dengan barcode ${barcode} tidak ditemukan.`);
+    }
+  };
+
+  useBarcodeScanner({
+    onScan: handleGlobalScan,
+    isActive: true
+  });
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -243,14 +261,14 @@ export default function POSView() {
                 placeholder="Cari produk / barcode..." 
                 className="w-full bg-slate-100 border-none rounded-xl py-3 pl-10 pr-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                 value={searchTerm}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setSearchTerm(val);
-                  // Quick scan match
-                  const matched = products.find(p => p.barcode === val);
-                  if (matched) {
-                    addToCart(matched);
-                    setSearchTerm('');
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const matched = products.find(p => p.barcode === searchTerm);
+                    if (matched) {
+                      addToCart(matched);
+                      setSearchTerm('');
+                    }
                   }
                 }}
               />
