@@ -1,0 +1,6 @@
+{
+  "name": "Kasir UMKM",
+  "description": "Aplikasi Kasir Point of Sale (POS) modern & responsif untuk UMKM.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": []
+}
