@@ -322,19 +322,21 @@ export default function POSView() {
                 key={product.id}
                 onClick={() => addToCart(product)}
                 disabled={product.stock <= 0}
-                className="border-2 border-slate-100 rounded-2xl p-3 text-center hover:border-emerald-500 focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed group relative flex flex-col h-40 overflow-hidden"
+                className="border-2 border-slate-100 rounded-2xl p-0 text-center hover:border-emerald-500 focus:outline-none focus:border-emerald-500 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed group relative flex flex-col h-48 overflow-hidden bg-white"
               >
-                <div className="w-full h-16 bg-slate-50 rounded-xl mb-2 flex flex-col items-center justify-center text-slate-400 group-hover:bg-emerald-50 transition-colors relative overflow-hidden">
+                <div className="w-full h-24 bg-slate-50 flex flex-col items-center justify-center text-slate-400 group-hover:bg-emerald-50 transition-colors relative overflow-hidden shrink-0 border-b border-slate-100">
                    {product.image ? (
-                     <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded-xl" />
+                     <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                    ) : (
                      <span className="text-[10px] font-medium bg-slate-200 text-slate-600 px-1.5 rounded uppercase">{product.category}</span>
                    )}
                 </div>
-                <p className="text-sm font-bold text-slate-800 line-clamp-2 leading-tight">{product.name}</p>
-                <div className="mt-auto">
-                  <p className="text-emerald-600 font-bold">{formatIDR(product.price)}</p>
-                  <div className="text-[10px] text-slate-400 font-medium mt-0.5">Stok: {product.stock}</div>
+                <div className="p-3 flex flex-col flex-1">
+                  <p className="text-sm font-bold text-slate-800 line-clamp-2 leading-tight">{product.name}</p>
+                  <div className="mt-auto">
+                    <p className="text-emerald-600 font-bold">{formatIDR(product.price)}</p>
+                    <div className="text-[10px] text-slate-400 font-medium mt-0.5">Stok: {product.stock}</div>
+                  </div>
                 </div>
               </button>
             ))}

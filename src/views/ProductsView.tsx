@@ -198,40 +198,46 @@ export default function ProductsView() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-2">
               {filteredProducts.map((product) => (
-                <div key={product.id} className="bg-white border-2 border-slate-100 p-4 rounded-2xl hover:border-emerald-500 transition-colors flex flex-col group overflow-hidden relative">
-                  {product.image && (
-                    <div className="absolute inset-0 bg-slate-50 opacity-10 pointer-events-none">
-                      <img src={product.image} className="w-full h-full object-cover" />
+                <div key={product.id} className="bg-white border-2 border-slate-100 rounded-2xl hover:border-emerald-500 transition-colors flex flex-col group overflow-hidden relative h-full">
+                  <div className="w-full h-32 bg-slate-50 relative overflow-hidden shrink-0 border-b-2 border-slate-100">
+                    {product.image ? (
+                      <img src={product.image} className="w-full h-full object-cover" alt={product.name} />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-300">
+                        <PackageOpen className="w-8 h-8 opacity-50" />
+                      </div>
+                    )}
+                    <div className="absolute top-2 left-2 z-10">
+                      <span className="bg-white/90 backdrop-blur-sm text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider shadow-sm">
+                        {product.category}
+                      </span>
                     </div>
-                  )}
-                  <div className="flex justify-between items-start mb-3 relative z-10">
-                    <span className="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-md font-bold uppercase tracking-wider shadow-sm">
-                      {product.category}
-                    </span>
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-2 right-2 flex gap-1 z-10">
                       <button 
                         onClick={() => handleOpenModal(product)} 
-                        className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors bg-white shadow-sm"
+                        className="p-1.5 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors bg-white shadow-sm border border-slate-200"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleDelete(product.id)}
-                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors bg-white shadow-sm"
+                        className="p-1.5 text-slate-600 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors bg-white shadow-sm border border-slate-200"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                   
-                  <h3 className="font-bold text-slate-800 mb-1 line-clamp-1 relative z-10">{product.name}</h3>
-                  <p className="text-emerald-600 font-black text-lg mb-4 relative z-10">{formatIDR(product.price)}</p>
-                  
-                  <div className="mt-auto pt-3 border-t-2 border-dashed border-slate-200 flex justify-between items-center text-sm relative z-10">
-                    <span className="text-slate-400 font-medium text-xs uppercase tracking-widest">Sisa Stok</span>
-                    <span className={`font-bold px-2 py-0.5 rounded ${product.stock <= 5 ? 'bg-red-50 text-red-600' : 'bg-slate-50 text-slate-700'}`}>
-                      {product.stock}
-                    </span>
+                  <div className="p-4 flex flex-col flex-1">
+                    <h3 className="font-bold text-slate-800 mb-1 line-clamp-1">{product.name}</h3>
+                    <p className="text-emerald-600 font-black text-lg mb-3">{formatIDR(product.price)}</p>
+                    
+                    <div className="mt-auto pt-3 border-t-2 border-dashed border-slate-100 flex justify-between items-center text-sm">
+                      <span className="text-slate-400 font-medium text-xs uppercase tracking-widest">Sisa Stok</span>
+                      <span className={`font-bold px-2 py-0.5 rounded text-xs ${product.stock <= 5 ? 'bg-red-50 text-red-600' : 'bg-slate-50 text-slate-700'}`}>
+                        {product.stock}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
